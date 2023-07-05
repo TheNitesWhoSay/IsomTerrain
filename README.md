@@ -4,7 +4,7 @@ A standalone, open-source implementation of StarCraft's isometric terrain editin
 - [IsomApi.h](https://github.com/TheNitesWhoSay/IsomTerrain/blob/main/IsomTerrain/IsomApi.h) - centralized collection of ISOM-related code
 - [IsomTests.cpp](https://github.com/TheNitesWhoSay/IsomTerrain/blob/main/IsomTerrain/IsomTests.cpp) - automation tests & example uses
 
-The above files contain what should be of interest in relation to ISOM new-map generation, editing, and resizing. There is a lot of supporting code here from [Chkdraft](https://github.com/TheNitesWhoSay/Chkdraft) - MappingCoreLib and its dependencies: CascLib, CrossCutLib, IcuLib, rarecpp, StormLib. These are primarily for loading & parsing maps but it shouldn't be important for understanding ISOM itself. See Chkdraft if you're interested in a GUI application making use of code (though unlike in this project it will be factored out to several files where appropriate).
+The above files contain what should be of interest in relation to ISOM new-map generation, editing, and resizing. There is a lot of supporting code here from [Chkdraft](https://github.com/TheNitesWhoSay/Chkdraft) - MappingCoreLib and its dependencies: CascLib, CrossCutLib, IcuLib, rarecpp, StormLib. These are primarily for loading & parsing maps but they shouldn't be important for understanding ISOM itself. See Chkdraft if you're interested in a GUI application making use of code (though unlike in this project it will be factored out to several files where appropriate).
 
 # Credits
 - Blizzard Entertainment - creator and owner of [StarCraft](https://starcraft.com/en-us/) and the staredit campaign editor.
