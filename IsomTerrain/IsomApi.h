@@ -582,8 +582,6 @@ namespace Sc {
                         fillInnerLinkIds(brushLinkId);
                 }
             }
-
-
         };
 
         struct TerrainTypeInfo
@@ -1566,7 +1564,7 @@ namespace Chk {
             this->newValue.bottom = newValue.bottom & Chk::IsomRect::EditorFlag::ClearAll;
         }
 
-        IsomRectUndo(Chk::IsomDiamond diamond, const Chk::IsomRect & oldValue, const Chk::IsomRect & newValue)
+        inline IsomRectUndo(Chk::IsomDiamond diamond, const Chk::IsomRect & oldValue, const Chk::IsomRect & newValue)
             : diamond(diamond)
         {
             setOldValue(oldValue);
@@ -1667,14 +1665,14 @@ struct ScMap
     
     constexpr size_t getIsomWidth() const { return size_t(tileWidth)/2 + 1; }
     constexpr size_t getIsomHeight() const { return size_t(tileHeight) + 1; }
-    Chk::IsomRect & getIsomRect(size_t isomRectIndex)
+    inline Chk::IsomRect & getIsomRect(size_t isomRectIndex)
     {
         if ( isomRectIndex < this->isomRects.size() )
             return this->isomRects[isomRectIndex];
         else
             throw std::out_of_range(std::string("IsomRectIndex: ") + std::to_string(isomRectIndex) + " is past the end of the ISOM section!");
     }
-    const Chk::IsomRect & getIsomRect(size_t isomRectIndex) const
+    inline const Chk::IsomRect & getIsomRect(size_t isomRectIndex) const
     {
         if ( isomRectIndex < this->isomRects.size() )
             return this->isomRects[isomRectIndex];
@@ -1682,7 +1680,7 @@ struct ScMap
             throw std::out_of_range(std::string("IsomRectIndex: ") + std::to_string(isomRectIndex) + " is past the end of the ISOM section!");
     }
     
-    bool placeIsomTerrain(Chk::IsomDiamond isomDiamond, size_t terrainType, size_t brushExtent, Chk::IsomCache & cache)
+    inline bool placeIsomTerrain(Chk::IsomDiamond isomDiamond, size_t terrainType, size_t brushExtent, Chk::IsomCache & cache)
     {
         uint16_t isomValue = cache.getTerrainTypeIsomValue(terrainType);
         if ( isomValue == 0 || !isomDiamond.isValid() || size_t(isomValue) >= cache.isomLinks.size() || cache.isomLinks[size_t(isomValue)].terrainType == 0 )
@@ -1722,7 +1720,7 @@ struct ScMap
         radiallyUpdateTerrain(true, diamondsToUpdate, cache);
         return true;
     }
-    void copyIsomFrom(const ScMap & sourceMap, int32_t xTileOffset, int32_t yTileOffset, bool undoable, Chk::IsomCache & destCache)
+    inline void copyIsomFrom(const ScMap & sourceMap, int32_t xTileOffset, int32_t yTileOffset, bool undoable, Chk::IsomCache & destCache)
     {
         size_t sourceIsomWidth = sourceMap.tileWidth/2 + 1;
         size_t sourceIsomHeight = sourceMap.tileHeight + 1;
@@ -1773,7 +1771,7 @@ struct ScMap
             }
         }
     }
-    void updateTilesFromIsom(Chk::IsomCache & cache)
+    inline void updateTilesFromIsom(Chk::IsomCache & cache)
     {
         for ( size_t y=cache.changedArea.top; y<=cache.changedArea.bottom; ++y )
         {
@@ -1788,7 +1786,7 @@ struct ScMap
         }
         cache.resetChangedArea();
     }
-    bool resizeIsom(int32_t xTileOffset, int32_t yTileOffset, size_t oldMapWidth, size_t oldMapHeight, bool fixBorders, Chk::IsomCache & cache)
+    inline bool resizeIsom(int32_t xTileOffset, int32_t yTileOffset, size_t oldMapWidth, size_t oldMapHeight, bool fixBorders, Chk::IsomCache & cache)
     {
         int32_t xDiamondOffset = xTileOffset/2;
         int32_t yDiamondOffset = yTileOffset;
@@ -2065,7 +2063,7 @@ private:
 
         constexpr NeighborQuadrant & operator[](size_t i) { return (*this)[Sc::Isom::Quadrant(i)]; }
     };
-    void loadNeighborInfo(Chk::IsomDiamond isomDiamond, IsomNeighbors & neighbors, Span<Sc::Isom::ShapeLinks> isomLinks) const
+    inline void loadNeighborInfo(Chk::IsomDiamond isomDiamond, IsomNeighbors & neighbors, Span<Sc::Isom::ShapeLinks> isomLinks) const
     {
         for ( auto i : Chk::IsomDiamond::neighbors ) // Gather info about the four neighboring isom diamonds/isom shapes
         {
@@ -2084,7 +2082,7 @@ private:
             }
         }
     }
-    uint16_t countNeighborMatches(const Sc::Isom::ShapeLinks & shapeLinks, IsomNeighbors & neighbors, Span<Sc::Isom::ShapeLinks> isomLinks) const
+    inline uint16_t countNeighborMatches(const Sc::Isom::ShapeLinks & shapeLinks, IsomNeighbors & neighbors, Span<Sc::Isom::ShapeLinks> isomLinks) const
     {
         auto terrainType = shapeLinks.terrainType;
         uint16_t totalMatches = 0;
@@ -2102,7 +2100,7 @@ private:
         }
         return totalMatches;
     }
-    void searchForBestMatch(uint16_t startingTerrainType, IsomNeighbors & neighbors, Chk::IsomCache & cache) const
+    inline void searchForBestMatch(uint16_t startingTerrainType, IsomNeighbors & neighbors, Chk::IsomCache & cache) const
     {
         bool searchUntilHigherTerrainType = startingTerrainType == cache.terrainTypes.size()/2+1; // The final search always searches until end or higher types
         bool searchUntilEnd = startingTerrainType == 0; // If startingTerrainType is zero, the whole table after start must be searched
@@ -2119,7 +2117,7 @@ private:
                 neighbors.bestMatch = {isomValue, matchCount};
         }
     }
-    std::optional<uint16_t> findBestMatchIsomValue(Chk::IsomDiamond isomDiamond, Chk::IsomCache & cache) const
+    inline std::optional<uint16_t> findBestMatchIsomValue(Chk::IsomDiamond isomDiamond, Chk::IsomCache & cache) const
     {
         IsomNeighbors neighbors {};
         loadNeighborInfo(isomDiamond, neighbors, cache.isomLinks);
@@ -2139,7 +2137,7 @@ private:
         else
             return neighbors.bestMatch.isomValue;
     }
-    void radiallyUpdateTerrain(bool undoable, std::deque<Chk::IsomDiamond> & diamondsToUpdate, Chk::IsomCache & cache)
+    inline void radiallyUpdateTerrain(bool undoable, std::deque<Chk::IsomDiamond> & diamondsToUpdate, Chk::IsomCache & cache)
     {
         while ( !diamondsToUpdate.empty() )
         {
@@ -2165,7 +2163,7 @@ private:
         }
     }
 
-    void updateTileFromIsom(Chk::IsomDiamond isomDiamond, Chk::IsomCache & cache)
+    inline void updateTileFromIsom(Chk::IsomDiamond isomDiamond, Chk::IsomCache & cache)
     {
         if ( isomDiamond.x+1 >= cache.isomWidth || isomDiamond.y+1 >= cache.isomHeight )
             return;
